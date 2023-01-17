@@ -1,8 +1,10 @@
-
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
-import { useState, useRef } from 'react';
+import {
+  useState,
+  useRef
+} from 'react';
 
 // const dummyList = [
 //   {
@@ -30,28 +32,54 @@ import { useState, useRef } from 'react';
 
 function App() {
 
- const [data, setData] = useState([]) ;
- const dataId = useRef(0);
+  const [data, setData] = useState([]);
+  const dataId = useRef(0);
 
- const onCreate = (author, content, emotioin) => {
-  const create_date = new Date().getTime();
-  const newItem = {
+  const onCreate = (author, content, emotion) => {
+    const create_date = new Date().getTime();
+    const newItem = {
       author,
       content,
-      emotioin,
+      emotion,
       create_date,
       id: dataId.current
     }
-    dataId.current +=1;
+    dataId.current += 1;
     setData([newItem, ...data]);
   };
 
- return (
-    <div className="App">
-      <DiaryEditor onCreate={onCreate}/>
-      <DiaryList diaryList={data/*dummyList*/}/>
-      {/* <DiaryList diaryList={undefined}/> */}
-    </div>
+  const onRemove = (targetId) => {
+    console.log(`${targetId}가 삭제되었습니다.`);
+    const newDiaryList = data.filter((it) => it.id !== targetId);
+    console.log(newDiaryList);
+    setData(newDiaryList);
+  };
+
+  const onEdit = (targetId, newContent) => {
+    setData(
+      data.map((it) => it.id === targetId ? {
+        ...it,
+        content: newContent
+      } : it)
+    )
+  }
+
+  return ( <
+    div className = "App" >
+    <
+    DiaryEditor onCreate = {
+      onCreate
+    }
+    /> <
+    DiaryList onRemove = {
+      onRemove
+    }
+    diaryList = {
+      data /*dummyList*/
+    }
+    /> {
+      /* <DiaryList diaryList={undefined}/> */ } <
+    /div>
   );
 }
 
